@@ -104,7 +104,10 @@ jobs:
         if: steps.registry.outputs.published == 'false'
         uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
         with:
-          ruby-version: "3.4.7"
+          # A SERIES, never a patch: ubuntu-latest moves to newer images, and
+          # setup-ruby builds only the latest patch of each series for those, so a
+          # pinned patch ("3.4.7") fails setup the day the runner image moves.
+          ruby-version: "3.4"
 
       - name: Build the gem
         if: steps.registry.outputs.published == 'false'
