@@ -1,0 +1,152 @@
+# PUBLISHES THIS GEM TO RubyGems. This file is OUTPUT: it is written here by the sync
+# in Listo's own repository, whose copy of this file is its source, and a change
+# to it is released as a new version like any other.
+#
+# WHEN IT RUNS: when the sync pushes a tag `v<version>`, and by hand to retry:
+#   gh workflow run publish.yml --repo listo-delivery/listo-ruby --ref v<version>
+# It refuses anything that is not a tag, and a tag that is not `v` plus
+# ListoDelivery::VERSION, so a published version always names the tag it was built
+# from. It builds from this repository's own tree and SKIPS (green) when that version
+# is already on RubyGems, so a retry is safe and never overwrites a release.
+#
+# TRUSTED PUBLISHING, NO STORED KEYS: RubyGems trusts this repository, this workflow
+# file and the environment `release` (a pending trusted publisher for the gem
+# listo-delivery: owner listo-delivery, repository listo-ruby, workflow publish.yml,
+# environment release; the first run creates the gem). `rubygems/release-gem` is NOT
+# used: it runs `rake release` through bundler and pushes a git tag, and this
+# repository has no Gemfile or Rakefile. `rubygems/configure-rubygems-credentials` is
+# NOT used either: RubyGems requires a pending trusted publisher's first push to name
+# the owning account (`owner: 255708`, the immutable id) when the OIDC token is
+# exchanged, and no released version of that action has the input. So the last step
+# does the exchange itself (POST /api/v1/oidc/trusted_publisher/exchange_token, a
+# 15-minute key, masked, used by `gem push` in that same step). A pending trusted
+# publisher is valid for about 12 hours from its creation: create it again if the
+# first tag is pushed later. The gemspec sets
+# `rubygems_mfa_required`, which does not block a trusted publisher: RubyGems
+# checks that requirement only for a key owned by a user, and a trusted publisher's
+# short-lived key is not one.
+#
+# `ubuntu-latest`: this repository is public, so GitHub-hosted runners are free, and
+# trusted publishing runs on GitHub's own runners. Every action is pinned by full
+# commit SHA, the release tag in the comment.
+
+name: Publish to RubyGems
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+# A second tag waits for the first run; a publish is never cancelled half way.
+concurrency:
+  group: publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: release
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Check the tag against the manifest
+        id: version
+        run: |
+          version="$(ruby -e 'require "./lib/listo_delivery/version"; print ListoDelivery::VERSION')"
+          if [ "$GITHUB_REF_TYPE" != "tag" ]; then
+            echo "::error::Run this from a tag, not from $GITHUB_REF. Retry with: gh workflow run publish.yml --repo listo-delivery/listo-ruby --ref v$version"
+            exit 1
+          fi
+          if [ "$GITHUB_REF_NAME" != "v$version" ]; then
+            echo "::error::The tag is $GITHUB_REF_NAME but ListoDelivery::VERSION is $version, so the tag must be v$version."
+            exit 1
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Is this version already on RubyGems
+        id: registry
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          status="$(curl --silent --show-error --max-time 60 --retry 3 --output /dev/null --write-out '%{http_code}' "https://rubygems.org/api/v2/rubygems/listo-delivery/versions/$VERSION.json")" || status=000
+          case "$status" in
+            200)
+              echo "listo-delivery $VERSION is already on RubyGems: nothing to publish."
+              echo "published=true" >> "$GITHUB_OUTPUT"
+              ;;
+            404)
+              echo "listo-delivery $VERSION is not on RubyGems yet: publishing."
+              echo "published=false" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "::error::RubyGems answered HTTP $status, so whether $VERSION is published is unknown. Not publishing."
+              exit 1
+              ;;
+          esac
+
+      - name: Set up Ruby
+        if: steps.registry.outputs.published == 'false'
+        uses: ruby/setup-ruby@7f797815d8adceb1c412e7abefdd1ab4abc47a5f # v1.335.0
+        with:
+          ruby-version: "3.4.7"
+
+      - name: Build the gem
+        if: steps.registry.outputs.published == 'false'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir "$RUNNER_TEMP/dist"
+          gem build listo_delivery.gemspec --output "$RUNNER_TEMP/dist/listo_delivery-$VERSION.gem"
+
+      # The OIDC exchange is done here and not by an action, because RubyGems requires a
+      # pending trusted publisher's first push to NAME the account that owns the gem
+      # (`owner`, the account's immutable id) and no released rubygems action takes that
+      # input. The 15-minute key lives in this step's shell alone: masked at once, passed
+      # to `gem push` as an environment variable of that one command, never written to
+      # GITHUB_ENV, a file or another step. RUBYGEMS_HOST is also what `gem push` reads.
+      - name: Exchange the OIDC token for a RubyGems key and push the gem
+        if: steps.registry.outputs.published == 'false'
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+          RUBYGEMS_HOST: https://rubygems.org
+          # The immutable RubyGems account id of the listodelivery account that owns the
+          # gem: required on the first push by the pending trusted publisher, harmless
+          # afterwards.
+          RUBYGEMS_OWNER: "255708"
+        run: |
+          set -euo pipefail
+          oidc="$(curl -fsS --max-time 30 --retry 3 -H "Authorization: bearer $ACTIONS_ID_TOKEN_REQUEST_TOKEN" "$ACTIONS_ID_TOKEN_REQUEST_URL&audience=rubygems.org" | jq -er .value)"
+          echo "::add-mask::$oidc"
+          body="$(printf '%s' "$oidc" | jq -Rn --arg owner "$RUBYGEMS_OWNER" '{jwt: input, owner: $owner}')"
+          # No --retry on this POST: the OIDC token's jti can be exchanged once, so a retry
+          # after a request that reached RubyGems answers 422 "jti must be unique".
+          reply="$(printf '%s' "$body" | curl -sS --max-time 60 -X POST -H 'Content-Type: application/json' -H 'Accept: application/json' --data-binary @- --write-out $'\n%{http_code}' "$RUBYGEMS_HOST/api/v1/oidc/trusted_publisher/exchange_token")" || { echo "::error::The RubyGems token exchange could not be reached."; exit 1; }
+          status="${reply##*$'\n'}"
+          reply="${reply%$'\n'*}"
+          # RubyGems answers a successful exchange 201 (created); 200 is accepted too.
+          case "$status" in
+            200|201) ;;
+            *)
+              echo "::error::RubyGems refused the token exchange (HTTP $status): $reply"
+              exit 1
+              ;;
+          esac
+          key="$(printf '%s' "$reply" | jq -er .rubygems_api_key)"
+          echo "::add-mask::$key"
+          GEM_HOST_API_KEY="$key" gem push "$RUNNER_TEMP/dist/listo_delivery-$VERSION.gem"
