@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.37.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.38.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 require_relative "api_version"
@@ -43,6 +43,7 @@ require_relative "models/reschedule_delivery_request"
 require_relative "models/same_day_terms"
 require_relative "models/send_test_webhook_request"
 require_relative "models/store"
+require_relative "models/store_add_on"
 require_relative "models/store_balance"
 require_relative "models/store_connected_event"
 require_relative "models/store_list"

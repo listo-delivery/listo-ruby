@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.37.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.38.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -26,7 +26,8 @@ module ListoDelivery
         "billing" => nil,
         "test" => nil,
         "created_at" => nil,
-        "plan" => ["model", "Store::Plan"]
+        "plan" => ["model", "Store::Plan"],
+        "add_ons" => ["model", "Store::AddOns"]
       }.freeze
 
       # The store id, `st_` prefixed.
@@ -140,6 +141,12 @@ module ListoDelivery
         read("plan")
       end
 
+      # The store's paid add-ons, or `null` when the store cannot hold any.
+      # @return [Models::Store::AddOns, nil]
+      def add_ons
+        read("add_ons")
+      end
+
       # The store's Plan Listo, or `null` when the store needs no plan: a test store, or a live store created before Plan Listo existed, which...
       class Plan < Model
         TYPES = {
@@ -228,6 +235,42 @@ module ListoDelivery
         # @return [Boolean]
         def courtesy
           read("courtesy")
+        end
+      end
+
+      # The store's paid add-ons, or `null` when the store cannot hold any.
+      class AddOns < Model
+        TYPES = {
+          "customer_whatsapp" => ["model", "StoreAddOn"],
+          "ratings" => ["model", "StoreAddOn"],
+          "card_payments" => ["model", "StoreAddOn"],
+          "wallet" => ["model", "StoreAddOn"],
+          "full_console" => ["model", "StoreAddOn"]
+        }.freeze
+
+        # @return [Models::StoreAddOn]
+        def customer_whatsapp
+          read("customer_whatsapp")
+        end
+
+        # @return [Models::StoreAddOn]
+        def ratings
+          read("ratings")
+        end
+
+        # @return [Models::StoreAddOn]
+        def card_payments
+          read("card_payments")
+        end
+
+        # @return [Models::StoreAddOn]
+        def wallet
+          read("wallet")
+        end
+
+        # @return [Models::StoreAddOn]
+        def full_console
+          read("full_console")
         end
       end
     end

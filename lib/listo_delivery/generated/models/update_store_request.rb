@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.37.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.38.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -19,7 +19,8 @@ module ListoDelivery
         "default_business_fee_share" => nil,
         "access_tier" => nil,
         "markup_cents" => nil,
-        "external_id" => nil
+        "external_id" => nil,
+        "add_ons" => ["model", "UpdateStoreRequest::AddOns"]
       }.freeze
 
       # @return [String, nil]
@@ -73,6 +74,7 @@ module ListoDelivery
         read("default_business_fee_share")
       end
 
+      # What the store gets besides the API.
       # One of: "api_only", "wallet", "full".
       # @return [String, nil]
       def access_tier
@@ -88,6 +90,48 @@ module ListoDelivery
       # @return [String, nil]
       def external_id
         read("external_id")
+      end
+
+      # Add-ons to switch on (`true`) or off (`false`).
+      # @return [Models::UpdateStoreRequest::AddOns, nil]
+      def add_ons
+        read("add_ons")
+      end
+
+      # Add-ons to switch on (`true`) or off (`false`).
+      class AddOns < Model
+        TYPES = {
+          "customer_whatsapp" => nil,
+          "ratings" => nil,
+          "card_payments" => nil,
+          "wallet" => nil,
+          "full_console" => nil
+        }.freeze
+
+        # @return [Boolean, nil]
+        def customer_whatsapp
+          read("customer_whatsapp")
+        end
+
+        # @return [Boolean, nil]
+        def ratings
+          read("ratings")
+        end
+
+        # @return [Boolean, nil]
+        def card_payments
+          read("card_payments")
+        end
+
+        # @return [Boolean, nil]
+        def wallet
+          read("wallet")
+        end
+
+        # @return [Boolean, nil]
+        def full_console
+          read("full_console")
+        end
       end
     end
   end
