@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.39.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.40.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -103,7 +103,7 @@ module ListoDelivery
       end
 
       # The goods value you sent, untouched.
-      # @return [Integer, nil]
+      # @return [Integer]
       def order_value_cents
         read("order_value_cents")
       end
