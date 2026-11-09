@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.41.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.42.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -27,7 +27,8 @@ module ListoDelivery
         "test" => nil,
         "created_at" => nil,
         "plan" => ["model", "Store::Plan"],
-        "add_ons" => ["model", "Store::AddOns"]
+        "add_ons" => ["model", "Store::AddOns"],
+        "order_value_limits" => ["model", "Store::OrderValueLimits"]
       }.freeze
 
       # The store id, `st_` prefixed.
@@ -145,6 +146,12 @@ module ListoDelivery
       # @return [Models::Store::AddOns, nil]
       def add_ons
         read("add_ons")
+      end
+
+      # The most an order may be worth at this store right now, per payment type.
+      # @return [Models::Store::OrderValueLimits]
+      def order_value_limits
+        read("order_value_limits")
       end
 
       # The store's Plan Listo, or `null` when the store needs no plan: a test store, or a live store created before Plan Listo existed, which...
@@ -271,6 +278,33 @@ module ListoDelivery
         # @return [Models::StoreAddOn]
         def full_console
           read("full_console")
+        end
+      end
+
+      # The most an order may be worth at this store right now, per payment type.
+      class OrderValueLimits < Model
+        TYPES = {
+          "prepaid_max_cents" => nil,
+          "card_max_cents" => nil,
+          "cash_max_cents" => nil
+        }.freeze
+
+        # The most an order you record as already paid (`prepaid`) may be worth at this store, in cents.
+        # @return [Integer]
+        def prepaid_max_cents
+          read("prepaid_max_cents")
+        end
+
+        # The most the food of an order paid by card link may be worth at this store, in cents.
+        # @return [Integer]
+        def card_max_cents
+          read("card_max_cents")
+        end
+
+        # The most the courier may collect in cash at this store (the order value plus the customer's share of the fee), in cents.
+        # @return [Integer]
+        def cash_max_cents
+          read("cash_max_cents")
         end
       end
     end
