@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.44.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.45.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -8,7 +8,8 @@ module ListoDelivery
     # Which event to send a sample of.
     class SendTestWebhookRequest < Model
       TYPES = {
-        "type" => nil
+        "type" => nil,
+        "deliver" => nil
       }.freeze
 
       # The published event type to send a sample of.
@@ -16,6 +17,12 @@ module ListoDelivery
       # @return [String]
       def type
         read("type")
+      end
+
+      # Whether the event is also sent to your webhook URL.
+      # @return [Boolean, nil]
+      def deliver
+        read("deliver")
       end
     end
   end
