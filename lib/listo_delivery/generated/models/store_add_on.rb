@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.43.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.44.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -42,7 +42,7 @@ module ListoDelivery
         read("renews_on")
       end
 
-      # The last day an `ending` add-on runs.
+      # The last day an `ending` add-on is on.
       # @return [String, nil]
       def ends_on
         read("ends_on")
