@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.40.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.41.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 require_relative "api_version"
@@ -23,6 +23,7 @@ require_relative "models/delivery_courier_location_event"
 require_relative "models/delivery_list"
 require_relative "models/delivery_message_skipped"
 require_relative "models/delivery_message_skipped_event"
+require_relative "models/delivery_rated_event"
 require_relative "models/delivery_status_changed_event"
 require_relative "models/delivery_updated_event"
 require_relative "models/error"

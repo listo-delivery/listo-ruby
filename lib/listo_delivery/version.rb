@@ -3,5 +3,5 @@
 module ListoDelivery
   # The SDK's own version. The API release it was generated from is
   # ListoDelivery::API_VERSION (generated/api_version.rb).
-  VERSION = "0.4.0"
+  VERSION = "0.5.0"
 end

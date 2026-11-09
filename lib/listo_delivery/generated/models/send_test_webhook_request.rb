@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.40.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.41.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -12,7 +12,7 @@ module ListoDelivery
       }.freeze
 
       # The published event type to send a sample of.
-      # One of: "delivery.status_changed", "delivery.updated", "delivery.courier_location", "withdrawal.updated", "store.updated", "store.connected", "delivery.message_skipped".
+      # One of: "delivery.status_changed", "delivery.updated", "delivery.courier_location", "withdrawal.updated", "store.updated", "store.connected", "delivery.message_skipped", "delivery.rated".
       # @return [String]
       def type
         read("type")

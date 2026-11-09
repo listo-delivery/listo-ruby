@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.40.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.41.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -35,6 +35,7 @@ module ListoDelivery
         "return_verification" => ["model", "Delivery::ReturnVerification"],
         "proof" => ["model", "Delivery::Proof"],
         "proofs" => ["model", "Delivery::Proofs"],
+        "rating" => ["model", "Delivery::Rating"],
         "cancellation" => ["model", "Delivery::Cancellation"],
         "failure_reason" => nil,
         "charges" => ["array", ["model", "Delivery::Charge"]],
@@ -215,6 +216,12 @@ module ListoDelivery
       # @return [Models::Delivery::Proofs]
       def proofs
         read("proofs")
+      end
+
+      # What the customer rated the FOOD, for a store with the `ratings` add-on.
+      # @return [Models::Delivery::Rating, nil]
+      def rating
+        read("rating")
       end
 
       # Who called the order off, and why.
@@ -753,6 +760,33 @@ module ListoDelivery
           def meters_from_store
             read("meters_from_store")
           end
+        end
+      end
+
+      # What the customer rated the FOOD, for a store with the `ratings` add-on.
+      class Rating < Model
+        TYPES = {
+          "food_stars" => nil,
+          "food_reasons" => ["array", nil],
+          "rated_at" => nil
+        }.freeze
+
+        # The customer's stars for the food, 1 to 5.
+        # @return [Integer]
+        def food_stars
+          read("food_stars")
+        end
+
+        # What went wrong with the food, when the customer rated it 3 stars or fewer and chose a reason.
+        # @return [Array<String>]
+        def food_reasons
+          read("food_reasons")
+        end
+
+        # When the customer gave the rating.
+        # @return [String]
+        def rated_at
+          read("rated_at")
         end
       end
 
