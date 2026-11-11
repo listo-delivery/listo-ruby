@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.46.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.47.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -53,7 +53,7 @@ module ListoDelivery
       end
 
       # `pending` until a human settles it.
-      # One of: "pending", "paid", "failed".
+      # One of: "pending", "paid", "failed", "canceled".
       # @return [String]
       def status
         read("status")
