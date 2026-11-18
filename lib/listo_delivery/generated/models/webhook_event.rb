@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.49.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.50.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
   module Models
-    # Every event your webhook endpoint receives, and every event the debugging reads return: one of the eight below, told apart by `type`.
+    # Every event your webhook endpoint receives, and every event the debugging reads return: one of the events below, told apart by `type`.
     class WebhookEvent < Model
       TYPES = {
         "id" => nil,
@@ -18,10 +18,12 @@ module ListoDelivery
       # type value => class name.
       VARIANTS = {
         "delivery.courier_location" => "DeliveryCourierLocationEvent",
+        "delivery.created" => "DeliveryCreatedEvent",
         "delivery.message_skipped" => "DeliveryMessageSkippedEvent",
         "delivery.rated" => "DeliveryRatedEvent",
         "delivery.status_changed" => "DeliveryStatusChangedEvent",
         "delivery.updated" => "DeliveryUpdatedEvent",
+        "order.status_changed" => "OrderStatusChangedEvent",
         "store.connected" => "StoreConnectedEvent",
         "store.updated" => "StoreUpdatedEvent",
         "withdrawal.updated" => "WithdrawalUpdatedEvent"

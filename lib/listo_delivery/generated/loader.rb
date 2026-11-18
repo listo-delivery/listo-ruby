@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.49.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.50.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 require_relative "api_version"
@@ -20,6 +20,7 @@ require_relative "models/create_store_request"
 require_relative "models/create_withdrawal_request"
 require_relative "models/delivery"
 require_relative "models/delivery_courier_location_event"
+require_relative "models/delivery_created_event"
 require_relative "models/delivery_list"
 require_relative "models/delivery_message_skipped"
 require_relative "models/delivery_message_skipped_event"
@@ -33,6 +34,10 @@ require_relative "models/ledger_entry"
 require_relative "models/ledger_entry_list"
 require_relative "models/manifest"
 require_relative "models/manifest_item"
+require_relative "models/order"
+require_relative "models/order_list"
+require_relative "models/order_status_changed"
+require_relative "models/order_status_changed_event"
 require_relative "models/owner_invitation"
 require_relative "models/ping"
 require_relative "models/quote"
@@ -63,6 +68,7 @@ require_relative "resources/connections"
 require_relative "resources/deliveries"
 require_relative "resources/events"
 require_relative "resources/ledger"
+require_relative "resources/orders"
 require_relative "resources/quotes"
 require_relative "resources/request_logs"
 require_relative "resources/stores"

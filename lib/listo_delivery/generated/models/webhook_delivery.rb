@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.49.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.50.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -35,7 +35,7 @@ module ListoDelivery
       end
 
       # The type of that event.
-      # One of: "delivery.status_changed", "delivery.updated", "delivery.courier_location", "withdrawal.updated", "store.updated", "store.connected", "delivery.message_skipped", "delivery.rated".
+      # One of: "delivery.status_changed", "delivery.updated", "delivery.courier_location", "withdrawal.updated", "store.updated", "store.connected", "delivery.message_skipped", "delivery.rated", "delivery.created", "order.status_changed".
       # @return [String]
       def event_type
         read("event_type")

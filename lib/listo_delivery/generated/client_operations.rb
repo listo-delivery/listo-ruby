@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.49.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.50.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -39,6 +39,11 @@ module ListoDelivery
     # @return [Resources::Ledger]
     def ledger
       @ledger ||= Resources::Ledger.new(self)
+    end
+
+    # @return [Resources::Orders]
+    def orders
+      @orders ||= Resources::Orders.new(self)
     end
 
     # @return [Resources::Quotes]
