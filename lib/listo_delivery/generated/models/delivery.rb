@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.50.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.51.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -21,6 +21,7 @@ module ListoDelivery
         "business_fee_cents" => nil,
         "customer_fee_cents" => nil,
         "tip_cents" => nil,
+        "order_protection_cents" => nil,
         "currency" => nil,
         "quote_id" => nil,
         "pickup" => ["model", "Delivery::Pickup"],
@@ -133,6 +134,12 @@ module ListoDelivery
         read("tip_cents")
       end
 
+      # The order protection charged on this delivery, in Mexican peso cents: 2% of `order_value_cents` plus 16% IVA on an order above $1,000 (a...
+      # @return [Integer]
+      def order_protection_cents
+        read("order_protection_cents")
+      end
+
       # One of: "MXN".
       # @return [String]
       def currency
@@ -194,7 +201,7 @@ module ListoDelivery
         read("tracking_url")
       end
 
-      # Present only when the order carries a dropoff PIN: when you asked for one (`verification.dropoff_pincode` on the create), or when Listo...
+      # Present only when the order carries a dropoff PIN: when you asked for one (`verification.dropoff_pincode` on the create), when Listo...
       # @return [Models::Delivery::Verification, nil]
       def verification
         read("verification")
@@ -580,7 +587,7 @@ module ListoDelivery
         end
       end
 
-      # Present only when the order carries a dropoff PIN: when you asked for one (`verification.dropoff_pincode` on the create), or when Listo...
+      # Present only when the order carries a dropoff PIN: when you asked for one (`verification.dropoff_pincode` on the create), when Listo...
       class Verification < Model
         TYPES = {
           "pincode" => nil
