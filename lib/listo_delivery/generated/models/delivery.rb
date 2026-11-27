@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-# GENERATED from Listo's API definition (API 1.51.0). Do not edit by hand:
+# GENERATED from Listo's API definition (API 1.52.0). Do not edit by hand:
 # this file is rewritten whenever the SDK is regenerated.
 
 module ListoDelivery
@@ -177,7 +177,7 @@ module ListoDelivery
         read("vehicle")
       end
 
-      # Null until a courier is assigned, and then FROZEN: a terminal delivery keeps reporting who carried it.
+      # Null until a courier is assigned.
       # @return [Models::Delivery::Courier, nil]
       def courier
         read("courier")
@@ -492,7 +492,7 @@ module ListoDelivery
         end
       end
 
-      # Null until a courier is assigned, and then FROZEN: a terminal delivery keeps reporting who carried it.
+      # Null until a courier is assigned.
       class Courier < Model
         TYPES = {
           "name" => nil,
